@@ -80,7 +80,7 @@ namespace UmbHttpStatusCode.Events
                         if (Int32.TryParse(subStatusProperty, out subStatusCode))
                         {
                             // Set status code.
-                            e.Context.Response.StatusCode = statusCode;
+                            e.Context.Response.SubStatusCode = subStatusCode;
                         }
                     }
                 }
