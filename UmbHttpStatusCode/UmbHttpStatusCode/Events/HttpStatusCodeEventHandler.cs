@@ -62,7 +62,16 @@ namespace UmbHttpStatusCode.Events
             var statusProperty = document.getProperty("umbHttpStatusCode");
             if (statusProperty != null)
             {
+                // Set status code.
                 e.Context.Response.StatusCode = Convert.ToInt32(statusProperty.Value);
+
+                // Look for status subcode.
+                var substatusProperty = document.getProperty("umbHttpSubStatusCode");
+                if (substatusProperty != null)
+                {
+                    // Set substatus code.
+                    e.Context.Response.SubStatusCode = Convert.ToInt32(substatusProperty.Value);
+                }
             }
         }
     }
