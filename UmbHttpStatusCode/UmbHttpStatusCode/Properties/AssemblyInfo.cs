@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("UmbHttpStatusCode")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("The Brian Powell Computers")]
+[assembly: AssemblyCompany("Brian M. Powell")]
 [assembly: AssemblyProduct("UmbHttpStatusCode")]
-[assembly: AssemblyCopyright("Copyright © The Brian Powell Computers 2013")]
+[assembly: AssemblyCopyright("Copyright ©2013, Brian M. Powell")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
