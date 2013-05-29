@@ -59,18 +59,30 @@ namespace UmbHttpStatusCode.Events
             var document = new Document(e.Page.PageID);
 
             // Set status if umbHttpStatusCode property exists.
-            var statusProperty = document.getProperty("umbHttpStatusCode");
-            if (statusProperty != null)
+            if (document.HasProperty("umbHttpStatusCode"))
             {
-                // Set status code.
-                e.Context.Response.StatusCode = Convert.ToInt32(statusProperty.Value);
+                // Define variables for storing values.
+                int statusCode = 0;
+                var statusProperty = document.getProperty("umbHttpStatusCode").Value.ToString();
 
-                // Look for status subcode.
-                var substatusProperty = document.getProperty("umbHttpSubStatusCode");
-                if (substatusProperty != null)
+                if (Int32.TryParse(statusProperty, out statusCode))
                 {
-                    // Set substatus code.
-                    e.Context.Response.SubStatusCode = Convert.ToInt32(substatusProperty.Value);
+                    // Set status code.
+                    e.Context.Response.StatusCode = statusCode;
+
+                    // Try setting substatus code if property exists.
+                    if (document.HasProperty("umbHttpSubStatusCode"))
+                    {
+                         // Define variables for storing values.
+                        int subStatusCode = 0;
+                        var subStatusProperty = document.getProperty("umbHttpSubStatusCode").Value.ToString();
+
+                        if (Int32.TryParse(subStatusProperty, out subStatusCode))
+                        {
+                            // Set status code.
+                            e.Context.Response.StatusCode = statusCode;
+                        }
+                    }
                 }
             }
         }
