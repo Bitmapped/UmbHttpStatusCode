@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Umbraco.Core;
 using umbraco;
 using umbraco.cms.businesslogic.web;
+using umbraco.NodeFactory;
 
 namespace UmbHttpStatusCode.Events
 {
@@ -26,8 +27,6 @@ namespace UmbHttpStatusCode.Events
                     {
                         // Register event.
                         UmbracoDefault.AfterRequestInit += new UmbracoDefault.RequestInitEventHandler(this.SetHttpStatusCode);
-
-
 
                         // Record that registration happened.
                         registerRan = true;
@@ -56,14 +55,14 @@ namespace UmbHttpStatusCode.Events
             }
 
             // Load document corresponding with current page.
-            var document = new Document(e.Page.PageID);
+            var node = new Node(e.PageId);
 
             // Set status if umbHttpStatusCode property exists.
-            if (document.HasProperty("umbHttpStatusCode"))
+            if (node.HasProperty("umbHttpStatusCode"))
             {
                 // Define variables for storing values.
                 int statusCode = 0;
-                var statusProperty = document.getProperty("umbHttpStatusCode").Value.ToString();
+                var statusProperty = node.GetProperty("umbHttpStatusCode").Value.ToString();
 
                 if (Int32.TryParse(statusProperty, out statusCode))
                 {
@@ -71,11 +70,11 @@ namespace UmbHttpStatusCode.Events
                     e.Context.Response.StatusCode = statusCode;
 
                     // Try setting substatus code if property exists.
-                    if (document.HasProperty("umbHttpSubStatusCode"))
+                    if (node.HasProperty("umbHttpSubStatusCode"))
                     {
                          // Define variables for storing values.
                         int subStatusCode = 0;
-                        var subStatusProperty = document.getProperty("umbHttpSubStatusCode").Value.ToString();
+                        var subStatusProperty = node.GetProperty("umbHttpSubStatusCode").Value.ToString();
 
                         if (Int32.TryParse(subStatusProperty, out subStatusCode))
                         {
