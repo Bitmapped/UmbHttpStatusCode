@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<umbPackage>
+  <files>
+    <file>
+      <guid>UmbHttpStatusCode.dll</guid>
+      <orgPath>/bin</orgPath>
+      <orgName>UmbHttpStatusCode.dll</orgName>
+    </file>
+  </files>
+  <info>
+    <package>
+      <name>UmbHttpStatusCode</name>
+      <version>2.0.0</version>
+      <license url="http://www.opensource.org/licenses/mit-license.php">MIT license</license>
+      <url>http://umbhttpstatuscode.codeplex.com/</url>
+      <requirements>
+        <major>7</major>
+        <minor>2</minor>
+        <patch>0</patch>
+      </requirements>
+    </package>
+    <author>
+      <name>Brian M. Powell</name>
+      <website>https://www.codeplex.com/site/users/view/Bitmapped</website>
+    </author>
+    <readme><![CDATA[This package allows users to specify HTTP status codes that Umbraco will return when displaying a specific page.
+
+Create the following page properties to use this package:
+- umbHttpStatusCode
+- umbHttpSubStatusCode]]></readme>
+  </info>
+  <DocumentTypes />
+  <Templates />
+  <Stylesheets />
+  <Macros />
+  <DictionaryItems />
+  <Languages />
+  <DataTypes />
+</umbPackage>
