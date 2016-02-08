@@ -4,6 +4,7 @@ using Umbraco.Core.Configuration;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Umbraco.Web.Routing;
+using Umbraco.Web;
 
 namespace UmbHttpStatusCode.Events
 {
@@ -27,8 +28,8 @@ namespace UmbHttpStatusCode.Events
         private void PublishedContentRequest_Prepared(object sender, EventArgs e)
         {
             // Get request.
-            PublishedContentRequest request = sender as PublishedContentRequest;
-            HttpContext context = HttpContext.Current;
+            var request = sender as PublishedContentRequest;
+            var context = HttpContext.Current;
 
             // Ensure request is valid and page exists.  Otherwise, return without doing anything.
             if ((request == null) || (request.Is404) || (request.IsRedirect))
@@ -44,49 +45,36 @@ namespace UmbHttpStatusCode.Events
             }
 
             // Determine if page has umbStatusCode property set.
-            if (request.PublishedContent.GetProperty("umbHttpStatusCode") != null)
+            if (request.PublishedContent.HasValue("umbHttpStatusCode"))
             {
-                // Define variables for storing values.
-                int statusCode = 0;
-                int subStatusCode = 0;
-                var statusProperty = request.PublishedContent.GetProperty("umbHttpStatusCode").Value.ToString();
 
-                // Try to parse status code.  If valid and greater than 0, set response code.
-                if (Int32.TryParse(statusProperty, out statusCode) && (statusCode > 0))
+                // Get status codes.
+                var statusCode = request.PublishedContent.GetPropertyValue<int>("umbHttpStatusCode");
+                var subStatusCode = (request.PublishedContent.HasValue("umbHttpSubStatusCode")) ? request.PublishedContent.GetPropertyValue<int>("umbHttpSubStatusCode") : 0;
+
+                // If status code is > 0, try to set it.
+                if (statusCode > 0)
                 {
-                    // Set status code for IIS.
-                    context.Response.StatusCode = statusCode;
-
-                    // Set status code for Umbraco.
+                    // Set response status for Umbraco, which will handle setting it for IIS.
                     request.SetResponseStatus(statusCode);
 
-                    // Try skipping custom IIS errors if desired.
-                    context.Response.TrySkipIisCustomErrors = UmbracoConfig.For.UmbracoSettings().WebRouting.TrySkipIisCustomErrors;
-
-                    // Try setting substatus code if property exists.
-                    if (request.PublishedContent.GetProperty("umbHttpSubStatusCode") != null)
+                    // Include in try-catch block in case there are problems setting depending on IIS version.
+                    try
                     {
-                        // Define variables for storing values.
-                        var subStatusProperty = request.PublishedContent.GetProperty("umbHttpSubStatusCode").Value.ToString();
+                        // Try skipping custom IIS errors if desired.
+                        context.Response.TrySkipIisCustomErrors = UmbracoConfig.For.UmbracoSettings().WebRouting.TrySkipIisCustomErrors;
 
-                        // Try to parse substatus code.  If valid and greater than 0, set response code.
-                        if (Int32.TryParse(subStatusProperty, out subStatusCode) && (subStatusCode > 0))
-                        {
-                            try
-                            {
-                                // Set status code.
-                                context.Response.SubStatusCode = subStatusCode;
-                            }
-                            catch { }
-                        }
+                        // Set substatus code. Umbraco will set main status code.
+                        context.Response.SubStatusCode = subStatusCode;
                     }
-
-                    // Log for debugger.
-                    LogHelper.Debug<HttpStatusCodeEventHandler>("Setting HTTP Status Code {0}.{1} for {2}.",
-                        () => statusCode,
-                        () => subStatusCode,
-                        () => context.Request.Url.AbsolutePath);
+                    catch { }
                 }
+
+                // Log for debugger.
+                LogHelper.Debug<HttpStatusCodeEventHandler>("Setting HTTP Status Code {0}.{1} for {2}.",
+                    () => statusCode,
+                    () => subStatusCode,
+                    () => context.Request.Url.AbsolutePath);
             }
         }
     }
