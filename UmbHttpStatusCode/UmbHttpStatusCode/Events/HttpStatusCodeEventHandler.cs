@@ -56,18 +56,22 @@ namespace UmbHttpStatusCode.Events
                 if (statusCode > 0)
                 {
                     // Set response status for Umbraco, which will handle setting it for IIS.
-                    request.SetResponseStatus(statusCode);
+                    request.SetResponseStatus(statusCode);                    
 
                     // Include in try-catch block in case there are problems setting depending on IIS version.
                     try
                     {
-                        // Try skipping custom IIS errors if desired.
-                        context.Response.TrySkipIisCustomErrors = UmbracoConfig.For.UmbracoSettings().WebRouting.TrySkipIisCustomErrors;
-
-                        // Set substatus code. Umbraco will set main status code.
+                        // Set status code and substatus code directly for IIS. While Umbraco sets status code itself, if we don't set status directly ourselves here substatus gets ignored.
+                        context.Response.StatusCode = statusCode;
                         context.Response.SubStatusCode = subStatusCode;
+
+                        // Try skipping custom IIS errors if desired.
+                        context.Response.TrySkipIisCustomErrors = UmbracoConfig.For.UmbracoSettings().WebRouting.TrySkipIisCustomErrors;                    
                     }
-                    catch { }
+                    catch (Exception ex) {
+                        // Error trying to set values.
+                        LogHelper.Debug<HttpStatusCodeEventHandler>(ex.ToString());
+                    }
                 }
 
                 // Log for debugger.
