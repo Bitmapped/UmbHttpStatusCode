@@ -1,5 +1,5 @@
 # UmbHttpStatusCode
-Plugin/event handler for Umbraco that allows users to specify HTTP Status Codes to be returned as page properties.
+Event handler plugin for Umbraco that allows users to specify as page properties HTTP Status Codes to be returned.
 
 ## What's inside
 This project includes a DLL that will register as an event handler with Umbraco. If pages are specified with the proper properties, it will set those as HTTP status and substatus codes for the pages.
