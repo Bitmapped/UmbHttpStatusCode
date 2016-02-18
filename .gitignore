@@ -11,3 +11,7 @@
 /umbhttpstatuscode/UmbracoTest/App_Data/Logs
 /umbhttpstatuscode/UmbracoTest/App_Data/TEMP
 UmbHttpStatusCode/.vs/UmbHttpStatusCode/v14/.suo
+/src/packages
+/src/UmbHttpStatusCode/bin
+/src/UmbHttpStatusCode/obj
+/src/UmbracoTest/obj/NuGet
